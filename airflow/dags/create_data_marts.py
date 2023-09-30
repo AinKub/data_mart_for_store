@@ -91,8 +91,15 @@ def prepare_data_marts_tables(cursor):
                                            itemId INTEGER NOT NULL,
                                            share_in_revenue_for_the_year NUMERIC(5, 2) NOT NULL
                                         )"""
-    cursor.execute(create_first_data_mart_query)
-    cursor.execute(create_second_data_mart_query)
+    delete_all_from_first_data_mart = "DELETE FROM main_sales_metrics"
+    delete_all_from_second_data_mart = "DELETE FROM top_items_for_current_year"
+
+    for query in (create_first_data_mart_query, 
+                  create_second_data_mart_query, 
+                  delete_all_from_first_data_mart, 
+                  delete_all_from_second_data_mart):
+        
+        cursor.execute(query)
 
 
 def insert_data_to_data_marts(cursor, first_data_mart_data, second_data_mart_data):
