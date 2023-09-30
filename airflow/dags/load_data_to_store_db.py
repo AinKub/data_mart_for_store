@@ -23,6 +23,9 @@ args = {
 }
 
 def insert_store_data_to_db():
+    """
+    Добавляет рандомные данные в таблицы `Users`, `Items` и `Purchases`
+    """
     
     users_query = ('INSERT INTO Users (userId, age) '
                    'VALUES (%s, %s)')
@@ -33,8 +36,11 @@ def insert_store_data_to_db():
     purchases_query = ('INSERT INTO Purchases (userId, itemId, date) '
                        'VALUES (%s, %s, %s)')
     
+    # 100 пользователей в возрасте от 18 до 60 лет
     users_data = [(user_id, random.randint(18, 60)) for user_id in range(1, 101)]
+    # 7 товаров по цене от 200 до 5000 у.е.
     items_data = [(item_id, random.randint(200, 5000) + 0.99) for item_id in range(1, 8)]
+    # Генерируем рандомные покупки в рандомные даты за август и сентябрь 2023 года
     purchases_data = [
         (random.randint(1, 100), 
          random.randint(1, 7), 
@@ -47,7 +53,7 @@ def insert_store_data_to_db():
          )
          for i in range(1000)
          ]
-    purchases_data.sort(key=lambda data: data[2])
+    purchases_data.sort(key=lambda data: data[2])  # Сортируем данные по дате перед вставкой
     
     connection = psycopg2.connect(**db_connection_data)
     cursor = connection.cursor()

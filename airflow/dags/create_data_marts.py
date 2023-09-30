@@ -21,6 +21,20 @@ args = {
 }
 
 def select_data_from_db(cursor):
+    """
+    Делает запрос к базе данных и возвращает данные для витрин данных.
+    В первой выборке возвращается:
+    - средняя сумма, которую тратят пользователи от 18 до 25 лет включительно
+    - средняя сумма, которую тратят пользователи от 26 до 35 лет включительно
+    - номер месяца, в котором выручка от пользователей в возрастном диапазоне 35+ самая большая
+    - какой товар обеспечивает наибольший вклад в выручку за текущий год
+
+    Во второй выборке возвращаются топ 3 товаров по выручке и их доля в общей выручке за текущий год
+
+    P.S. В силу того, чтобы не расширять запросы по нахождению номера месяца по наибольшей выручке по 
+    пользователям 35+ и принесшему наибольшую выручку товару было решено отфильтровать эти записи по
+    убыванию и ограничить первой записью 
+    """
     
     first_query = """SELECT between_18_and_25.prices_avg as between_18_and_25_prices_avg,
                             between_26_and_35.prices_avg as between_26_and_35_prices_avg,
@@ -81,6 +95,10 @@ def select_data_from_db(cursor):
 
 
 def prepare_data_marts_tables(cursor):
+    """
+    Подготавливает таблицы-витрины данных. Создаёт их, если не существуют и
+    очищают перед вставкой.
+    """
     create_first_data_mart_query = """CREATE TABLE IF NOT EXISTS main_sales_metrics (
                                         between_18_and_25_prices_avg NUMERIC(6, 2) NOT NULL,
                                         between_26_and_35_prices_avg NUMERIC(6, 2) NOT NULL,
@@ -103,6 +121,9 @@ def prepare_data_marts_tables(cursor):
 
 
 def insert_data_to_data_marts(cursor, first_data_mart_data, second_data_mart_data):
+    """
+    Вставляет полученные данные в подготовленные таблицы-витрины данных 
+    """
     insert_first_data_mart_query = """INSERT INTO main_sales_metrics (between_18_and_25_prices_avg,
                                                                       between_26_and_35_prices_avg,
                                                                       month_that_had_max_revenue,
@@ -118,6 +139,9 @@ def insert_data_to_data_marts(cursor, first_data_mart_data, second_data_mart_dat
 
 
 def extract_and_load_data_mart():
+    """
+    Осуществляет извлечение данных для витрин и вставляет полученные данные туда
+    """
     connection = psycopg2.connect(**db_connection_data)
     try:
         with connection:
