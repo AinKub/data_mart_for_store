@@ -28,3 +28,21 @@ docker compose up
 
 Для инициализации записей необходимо в веб-интерфейсе активировать даг **init_store_data**, а затем запустить даг **create_datamarts**.
 В последующем даг **create_datamarts** будет запускаться каждый день в 0:00 (в 3:00 по МСК)
+
+## Результаты
+
+В результате работы получается следующая структура базы данных:
+
+![created_data_marts](/img/created_data_marts.png)
+
+В таблице **purchase** инициализируются следующие данные (рандомные):
+
+![purchases](/img/purchases.png)
+
+Витрина **main_sales_metrics**:
+
+![main_sales_metrics](/img/main_sales_metrics.png)
+
+Витрина **top_items_for_current_year**:
+
+![top_items_for_current_year](/img/top_items_for_current_year.png)
